@@ -5,9 +5,9 @@ app = FastAPI()
 
 @app.get("/")
 def home():
-    return {"message": "Xcellrate AI is running without API keys!"}
+    return {"status": "Xcellrate AI Running"}
 
-@app.get("/daily-content")
-def daily_content():
-    data = generate_daily_content()
-    return data
+@app.get("/generate")
+def generate():
+    result = generate_daily_content()
+    return {"content": result}
