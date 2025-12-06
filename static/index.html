@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>XCELLRATE AI — Dashboard</title>
+  <style>
+    body { font-family: Inter, Arial; background:#0b1020; color:#fff; padding:24px; }
+    .card{ background:#0f1724; padding:18px; border-radius:12px; margin-bottom:12px;}
+    input, select, button, textarea { padding:8px; border-radius:8px; border:0; margin:4px 0; width:100%;}
+    button{ background:#146cff; color:#fff; cursor:pointer; }
+    pre{ background:#081023; padding:12px; border-radius:8px; overflow:auto; }
+  </style>
+</head>
+<body>
+  <h1>XCELLRATE AI — Dashboard</h1>
+  <div class="card">
+    <h3>Generate quick ideas</h3>
+    <input id="niche" placeholder="niche (e.g. faceless creators)" value="faceless creators" />
+    <button onclick="generate()">Generate</button>
+    <pre id="out1"></pre>
+  </div>
+
+  <div class="card">
+    <h3>30-day plan</h3>
+    <input id="niche2" placeholder="niche" value="faceless creators" />
+    <button onclick="daily()">Generate 30-day plan</button>
+    <pre id="out2" style="height:300px;"></pre>
+  </div>
+
+  <div class="card">
+    <h3>Product ideas</h3>
+    <input id="skill" placeholder="skill" value="design" />
+    <button onclick="products()">Generate products</button>
+    <pre id="out3"></pre>
+  </div>
+
+  <div class="card">
+    <h3>Generate cover image (1024)</h3>
+    <input id="prompt" value="15 REELS TEMPLATES — Make viral reels" />
+    <button onclick="genImage()">Generate image</button>
+    <div id="imgwrap"></div>
+  </div>
+
+<script>
+async function generate(){
+  const niche = document.getElementById('niche').value;
+  const res = await fetch('/generate?niche=' + encodeURIComponent(niche));
+  const j = await res.json();
+  document.getElementById('out1').innerText = JSON.stringify(j, null, 2);
+}
+
+async function daily(){
+  const niche = document.getElementById('niche2').value;
+  const res = await fetch('/daily-plan?niche=' + encodeURIComponent(niche));
+  const j = await res.json();
+  document.getElementById('out2').innerText = JSON.stringify(j, null, 2);
+}
+
+async function products(){
+  const skill = document.getElementById('skill').value;
+  const res = await fetch('/product-ideas?skill=' + encodeURIComponent(skill));
+  const j = await res.json();
+  document.getElementById('out3').innerText = JSON.stringify(j, null, 2);
+}
+
+async function genImage(){
+  const prompt = document.getElementById('prompt').value;
+  const res = await fetch('/generate-image?prompt=' + encodeURIComponent(prompt));
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  document.getElementById('imgwrap').innerHTML = `<a href="${url}" download="xcellrate_cover.png"><img src="${url}" style="max-width:300px;border-radius:8px"/></a>`;
+}
+</script>
+</body>
+</html>
